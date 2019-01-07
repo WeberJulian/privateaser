@@ -146,7 +146,7 @@ const actors = [{
   }]
 }];
 
-function payment(events, bars){
+function payment(events, bars, actors){
   for (let i = 0; i < events.length; i++){
     let bar = bars.find(x => x.id === events[i].barId)
     let price = bar.pricePerHour * events[i].time + bar.pricePerPerson * events[i].persons
@@ -175,4 +175,7 @@ function payment(events, bars){
 }
 
 payment(events, bars, actors)
+console.log("Events : ")
+console.log(events)
+console.log("Actors : ")
 console.log(actors)
