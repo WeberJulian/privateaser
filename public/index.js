@@ -150,6 +150,9 @@ function calPrices(events, bars){
   for (let i = 0; i < events.length; i++){
     let bar = bars.find(x => x.id === events[i].barId)
     let price = bar.pricePerHour * events[i].time + bar.pricePerPerson * events[i].persons
+    if(events[i].options.deductibleReduction){
+      price += events[i].persons
+    }
     if(events[i].persons >= 10){
       price *= 0.9
     }else if (events[i].persons >= 20){
