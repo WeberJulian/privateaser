@@ -158,7 +158,11 @@ function calPrices(events, bars){
       price *= 0.5
     }
     events[i].price = price
-  }
+    let commission = price * 0.3
+    events[i].commission.insurance = commission / 2
+    events[i].commission.treasury = events[i].persons
+    events[i].commission.privateaser = commission - (events[i].commission.insurance + events[i].commission.treasury)
+  } 
 }
 
 calPrices(events, bars)
