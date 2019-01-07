@@ -146,27 +146,33 @@ const actors = [{
   }]
 }];
 
-function calPrices(events, bars){
+function payment(events, bars){
   for (let i = 0; i < events.length; i++){
     let bar = bars.find(x => x.id === events[i].barId)
     let price = bar.pricePerHour * events[i].time + bar.pricePerPerson * events[i].persons
-    if(events[i].options.deductibleReduction){
-      price += events[i].persons
-    }
-    if(events[i].persons >= 10){
-      price *= 0.9
+    if (events[i].persons >= 60){
+      price *= 0.5
     }else if (events[i].persons >= 20){
       price *= 0.7
-    }else if (events[i].persons >= 60){
-      price *= 0.5
+    }else if(events[i].persons >= 10){
+      price *= 0.9
     }
-    events[i].price = price
     let commission = price * 0.3
     events[i].commission.insurance = commission / 2
     events[i].commission.treasury = events[i].persons
     events[i].commission.privateaser = commission - (events[i].commission.insurance + events[i].commission.treasury)
+    let deductibleReduction = 0
+    if(events[i].options.deductibleReduction){
+      deductibleReduction += events[i].persons
+    }
+    events[i].price = price + deductibleReduction
+    actors[i].payment[0].amount = price + deductibleReduction
+    actors[i].payment[1].amount = price - commission
+    actors[i].payment[2].amount = events[i].commission.insurance
+    actors[i].payment[3].amount = events[i].commission.treasury
+    actors[i].payment[4].amount = events[i].commission.privateaser + deductibleReduction
   } 
 }
 
-calPrices(events, bars)
-console.log(events)
+payment(events, bars, actors)
+console.log(actors)
